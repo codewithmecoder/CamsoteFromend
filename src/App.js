@@ -1,25 +1,57 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./App.css";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import ProductScreen from "./Screens/ProductScreen";
+import HomeScreen from "./Screens/HomeScreen";
+import CartScreen from "./Screens/CartScreen";
 
 function App() {
+  const openMenu = () => {
+    document.querySelector(".sidebar").classList.add("open");
+  };
+  const closeMenu = () => {
+    document.querySelector(".sidebar").classList.remove("open");
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div className="grid-container">
+        <header className="header">
+          <div className="brand">
+            <button className="burger" onClick={openMenu}>
+              &#9776;
+            </button>
+            <Link to="/">Camstòr</Link>
+          </div>
+          <div className="header-links">
+            <a href="cart.html">Carts</a>
+            <a href="signin.html">Sign in</a>
+          </div>
+        </header>
+        <aside className="sidebar">
+          <h3>Shopping Categories</h3>
+          <button className="sidebar-closeBtn" onClick={closeMenu}>
+            x
+          </button>
+          <ul>
+            <li>
+              <a href="index.html">Pants</a>
+            </li>
+            <li>
+              <a href="index.html">T-Shirts</a>
+            </li>
+          </ul>
+        </aside>
+        <main className="main">
+          <div className="content">
+            <Route path="/product/:id" component={ProductScreen} />
+            <Route path="/cart/:id?" component={CartScreen} />
+            <Route path="/" exact={true} component={HomeScreen} />
+          </div>
+        </main>
+        <footer className="footer">All Right reserved</footer>
+      </div>
+    </Router>
   );
 }
 
