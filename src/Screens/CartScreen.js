@@ -20,7 +20,11 @@ function CartScreen(props) {
     if (productId) {
       dispatch(addToCart(productId, qty));
     }
+    // eslint-disable-next-line
   }, []);
+  const checkOutHandler = () => {
+    props.history.push("/signin?redirect=shipping");
+  };
   return (
     <div className="cart">
       <div className="cart-list">
@@ -34,7 +38,7 @@ function CartScreen(props) {
           ) : (
             cartItems.map((item) => {
               return (
-                <li>
+                <li key={item.productId}>
                   <div className="cart-image">
                     <img src={item.image} alt={item.image} />
                   </div>
@@ -44,15 +48,25 @@ function CartScreen(props) {
                     </div>
                     <div>
                       Qty:
-                      <select>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
+                      <select
+                        className="select"
+                        value={item.qty}
+                        onChange={(e) => {
+                          dispatch(addToCart(item.productId, e.target.value));
+                        }}
+                      >
+                        {[...Array(item.countStok).keys()].map((x) => {
+                          return (
+                            <option key={x + 1} value={x + 1}>
+                              {x + 1}
+                            </option>
+                          );
+                        })}
                       </select>
                       <button
                         type="button"
                         onClick={() => removeFromCartHandler(item.id)}
-                        className="button"
+                        className="button del-btn"
                       >
                         Delete
                       </button>
@@ -70,7 +84,11 @@ function CartScreen(props) {
           Subtotal ( {cartItems.reduce((a, c) => a + c.qty, 0)} items) : ${" "}
           {cartItems.reduce((a, c) => a + c.price * c.qty, 0)}
         </h3>
-        <button className="button primary" disabled={cartItems.length === 0}>
+        <button
+          onClick={checkOutHandler}
+          className="button primary full-width"
+          disabled={cartItems.length === 0}
+        >
           Proceed To Checkout
         </button>
       </div>
